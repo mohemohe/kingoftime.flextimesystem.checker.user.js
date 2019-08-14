@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         フレックスタイムチェッカー
+// @name         フレックスチェッカー
 // @namespace    net.ghippos.userjs.kingtime
-// @version      1.0
+// @version      1.2
 // @description  夕方5時のチャイムで帰りたい
 // @author       mohemohe
 // @match        https://s3.kingtime.jp/admin/*
@@ -15,7 +15,9 @@
 
     const totalTime = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-normalTable.specific-table > table > tbody > tr:nth-child(1) > td:nth-child(2)').innerHTML);
     const totalDays = Array.from(document.querySelectorAll('.htBlock-scrollTable_day')).filter(element => element.classList.length == 1 || element.classList.contains('specific-uncomplete')).length;
-    const pastDays = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(1) > div').innerHTML, 10);
+    const workDays = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(1) > div').innerHTML, 10);
+    const paidHolidays = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(5) > div').innerHTML.split(' ')[0], 10);
+    const pastDays = workDays + paidHolidays;
     const remainDays = totalDays - pastDays;
     const pastTime = parseFloat(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-normalTable.specific-table > table > tbody > tr:nth-child(1) > td.all_work_time').innerHTML);
     const minimumTime = (totalTime - pastTime) / remainDays;
