@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         フレックスチェッカー
 // @namespace    net.ghippos.userjs.kingtime
-// @version      1.2
+// @version      1.3
 // @description  夕方5時のチャイムで帰りたい
 // @author       mohemohe
 // @match        https://s3.kingtime.jp/admin/*
@@ -15,8 +15,8 @@
 
     const totalTime = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-normalTable.specific-table > table > tbody > tr:nth-child(1) > td:nth-child(2)').innerHTML);
     const totalDays = Array.from(document.querySelectorAll('.htBlock-scrollTable_day')).filter(element => element.classList.length == 1 || element.classList.contains('specific-uncomplete')).length;
-    const workDays = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(1) > div').innerHTML, 10);
-    const paidHolidays = parseInt(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(5) > div').innerHTML.split(' ')[0], 10);
+    const workDays = parseFloat(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(1) > div').innerHTML);
+    const paidHolidays = parseFloat(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-autoNewLineTable.specific-autoNewLineTable > ul > li:nth-child(5) > div').innerHTML.split(' ')[0]);
     const pastDays = workDays + paidHolidays;
     const remainDays = totalDays - pastDays;
     const pastTime = parseFloat(document.querySelector('body > div > div.htBlock-mainContents > div > div.htBlock-normalTable.specific-table > table > tbody > tr:nth-child(1) > td.all_work_time').innerHTML);
@@ -33,19 +33,18 @@
     todayStartDate.setSeconds(todayStartDate.getSeconds() + minimumTime * 60 * 60 + 3600);
 
     if (document.querySelectorAll('.F').length === 0) {
-        document.querySelector('.face_template').innerHTML += `
-<div class="F">
-    <h4 class="htBlock-box_subTitle">情報</h4>
-    <p>今月の平日: ${totalDays}</p>
-    <p>経過日数(今日を含まない): ${pastDays}</p>
-    <p>残日数(今日を含む): ${remainDays}</p>
-    <p>合計勤務時間: ${pastTime}</p>
-    <p>平均勤務時間: ${pastTime / pastDays}</p>
-    <p>残勤務時間: ${totalTime - pastTime}</p>
-    <p>残日数あたりの最低勤務時間: ${minimumTime}</p>
-    <p>残日数あたりの最大勤務時間: ${((totalTime + config.みなし残業) - pastTime) / remainDays}</p>
-    <p>帰宅してもいい時刻: ${todayStartDate.toLocaleTimeString()}</p>
-</div>
-`;
+        document.querySelector('.face_template').innerHTML += `<div class="F"></div>`;
     }
+    document.querySelector('.F').innerHTML = `
+<h4 class="htBlock-box_subTitle">情報</h4>
+<p>今月の平日: ${totalDays}</p>
+<p>経過日数(今日を含まない): ${pastDays}</p>
+<p>残日数(今日を含む): ${remainDays}</p>
+<p>合計勤務時間: ${pastTime}</p>
+<p>平均勤務時間: ${pastTime / pastDays}</p>
+<p>残勤務時間: ${totalTime - pastTime}</p>
+<p>残日数あたりの最低勤務時間: ${minimumTime}</p>
+<p>残日数あたりの最大勤務時間: ${((totalTime + config.みなし残業) - pastTime) / remainDays}</p>
+<p>帰宅してもいい時刻: ${todayStartDate.toLocaleTimeString()}</p>
+`;
 })();
