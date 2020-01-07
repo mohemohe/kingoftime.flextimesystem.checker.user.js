@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         フレックスチェッカー
 // @namespace    net.ghippos.userjs.kingtime
-// @version      1.4
+// @version      1.5
 // @description  夕方5時のチャイムで帰りたい
 // @author       mohemohe
 // @match        https://s3.kingtime.jp/admin/*
@@ -304,7 +304,6 @@ class Info extends ReactModoki {
             remainPaidHolidays: 0,
             pastTime: 0,
             totalTime: 0,
-            pastTime: 0,
             todayStartDate: new Date(),
             adjustHour: 0,
         }
@@ -340,15 +339,13 @@ class Info extends ReactModoki {
     }
 
     render() {
-        let averageTime = (this.state.totalTime - this.state.pastTime) / this.state.remainDays;
+        let averageTime = this.state.pastTime === 0 ? 0 : this.state.pastTime / this.state.pastDays;
         let minimumTime = (this.state.totalTime - this.state.pastTime - this.state.adjustHour) / this.state.remainDays;
         if (minimumTime < 0) {
             minimumTime = 0;
         }
-        console.log(minimumTime);
         let startDate = new Date(this.state.todayStartDate.getTime());
         startDate.setSeconds(this.state.todayStartDate.getSeconds() + minimumTime * 60 * 60 + 3600);
-        console.log(startDate);
 
         return String.raw`
             <h4 class="htBlock-box_subTitle">情報</h4>
