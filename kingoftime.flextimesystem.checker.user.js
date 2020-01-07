@@ -68,6 +68,7 @@ class Day {
     }
 
     get startDate() {
+        // FIXME: 日付を考慮してない　が、時刻しか使ってないから一応動く
         const date = new Date();
         const start = this.tr.querySelector('[data-ht-sort-index="START_TIMERECORD"] p').innerText.trim();
         if (start.length === 0) {
