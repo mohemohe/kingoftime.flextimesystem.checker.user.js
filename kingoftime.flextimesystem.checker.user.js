@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         フレックスチェッカー
 // @namespace    net.ghippos.userjs.kingtime
-// @version      1.5
+// @version      1.6
 // @description  夕方5時のチャイムで帰りたい
 // @author       mohemohe
 // @match        https://s3.kingtime.jp/admin/*
@@ -339,8 +339,9 @@ class Info extends ReactModoki {
     }
 
     render() {
-        let averageTime = this.state.pastTime === 0 ? 0 : this.state.pastTime / this.state.pastDays;
-        let minimumTime = (this.state.totalTime - this.state.pastTime - this.state.adjustHour) / this.state.remainDays;
+        const pastTime = this.state.pastTime + this.state.adjustHour;
+        let averageTime = pastTime === 0 ? 0 : pastTime / this.state.pastDays;
+        let minimumTime = (this.state.totalTime - pastTime) / this.state.remainDays;
         if (minimumTime < 0) {
             minimumTime = 0;
         }
@@ -356,10 +357,10 @@ class Info extends ReactModoki {
             <p>合計勤務時間: ${this.state.pastTime}</p>
             <p>有休予定時間: ${this.state.remainPaidHolidays * 8}</p>
             <p>調整時間: <input type="number" onchange="${this.bind(this.onChange)}" value="${this.state.adjustHour}"></p>
-            <p>残勤務時間: ${this.state.totalTime - this.state.pastTime - this.state.adjustHour}</p>
+            <p>残勤務時間: ${this.state.totalTime - pastTime}</p>
             <p>平均勤務時間: ${averageTime}</p>
-            <p>残日数あたりの最低勤務時間: ${(this.state.totalTime - this.state.pastTime - this.state.adjustHour) / this.state.remainDays}</p>
-            <p>残日数あたりの最大勤務時間: ${((this.state.totalTime + config.みなし残業) - this.state.pastTime - this.state.adjustHour) / this.state.remainDays}</p>
+            <p>残日数あたりの最低勤務時間: ${(this.state.totalTime - pastTime) / this.state.remainDays}</p>
+            <p>残日数あたりの最大勤務時間: ${((this.state.totalTime + config.みなし残業) - pastTime) / this.state.remainDays}</p>
             <p>帰宅してもいい時刻: ${startDate.toLocaleTimeString()}</p>
         `;
     }
